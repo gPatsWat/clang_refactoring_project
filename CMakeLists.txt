@@ -89,17 +89,17 @@ add_subdirectory(lib)
 
 # 3. ---------- Unit Tests ------------
 # default behaviour is to build gtests
-# option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
-# if (DEFINED ENABLE_UNIT_TESTS )
-#    set(CORCT_GTEST_DIR ${CMAKE_SOURCE_DIR}/test)
-#    if (IS_DIRECTORY ${CORCT_GTEST_DIR})
-#       add_subdirectory(${CORCT_GTEST_DIR})
-#    else()
-#       message("CORCT_GTEST_DIR:" ${CORCT_GTEST_DIR})
-#       message("CMAKE_SOURCE_DIR:" ${CMAKE_SOURCE_DIR})
-#       message("Warning: Test dir ${CORCT_GTEST_DIR} not found.")
-#    endif()
-# endif()
+option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
+if (DEFINED ENABLE_UNIT_TESTS )
+   set(CORCT_GTEST_DIR ${CMAKE_SOURCE_DIR}/test)
+   if (IS_DIRECTORY ${CORCT_GTEST_DIR})
+      add_subdirectory(${CORCT_GTEST_DIR})
+   else()
+      message("CORCT_GTEST_DIR:" ${CORCT_GTEST_DIR})
+      message("CMAKE_SOURCE_DIR:" ${CMAKE_SOURCE_DIR})
+      message("Warning: Test dir ${CORCT_GTEST_DIR} not found.")
+   endif()
+endif()
 
 # 4. ----------- Appz ------------
 
