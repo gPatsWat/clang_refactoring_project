@@ -17,5 +17,6 @@ macro(add_refactor_exe app_name app_src)
 endmacro()
 
 add_refactor_exe(callsite-lister CallsiteLister.cc)
+add_refactor_exe(branchsite-lister BranchsiteLister.cc)
 
 # End of file

@@ -4,7 +4,7 @@ file(GLOB REFACTOR_SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cc )
 
 add_library(refactor ${REFACTOR_SRC} )
 
-install(FILES ${CORCT_HEADERS} DESTINATION include)
+install(FILES ${REFACTOR_HEADERS} DESTINATION include)
 install(TARGETS refactor DESTINATION lib)
 
 # End of file
