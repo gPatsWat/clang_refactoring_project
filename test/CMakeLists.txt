@@ -43,4 +43,6 @@ target_link_libraries(corct_unittests
   z
   )
 
+  add_subdirectory(test-progs)
+
 # End of file

@@ -31,4 +31,8 @@
 *.out
 *.app
 
+# assembly output to check if compiler optimises out things
+*.S
+
 build/**
+prac/**
