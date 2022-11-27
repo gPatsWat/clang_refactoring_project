@@ -2,6 +2,7 @@
 #include <time.h>
 
 int foo(int a, int b) {
+    std::cout << "standard" << std::endl;
     if(a || b) {
         return 5;
     }
@@ -9,6 +10,7 @@ int foo(int a, int b) {
 }
 
 int foo_branchless(int a, int b) {
+    std::cout << "branchless" << std::endl;
     bool c = a || b;
     return c*5 + !c*(-1);
 }
@@ -27,7 +29,7 @@ void run_n_times(int (*func)(int , int), int n) {
 int
 main(int argc, char ** argv)
 {
-    int a = 0, b = 0, result = 0;
+    int result = 0;
     /* initialize random seed */
     srand(time(NULL));
 

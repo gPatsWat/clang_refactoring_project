@@ -40,6 +40,8 @@ using sm_ptr_t = clang::SourceManager *;
 using sm_ref_t = clang::SourceManager &;
 using sm_cref_t = clang::SourceManager const &;
 using sm_cc_ptr_t = clang::SourceManager const * const;
+using ppolicy_t = clang::PrintingPolicy;
+using langopts_t = clang::LangOptions;
 }  // namespace corct
 
 #endif  // include guard

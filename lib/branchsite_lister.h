@@ -14,6 +14,11 @@ namespace corct
                               clang::SourceManager &sm,
                               std::ostream &o);
 
+    void print_branch_details(clang::Expr const * stmt,
+                              clang::IfStmt const * ifstmt,
+                              clang::SourceManager &sm,
+                              std::ostream &o);
+
     struct branchsite_lister : public callback_t
     {
         using matcher_t = clang::ast_matchers::StatementMatcher;
@@ -30,10 +35,10 @@ namespace corct
         void run(result_t const &result) override
         {
             using namespace clang;
-            Stmt const *stmt =
-                result.Nodes.getNodeAs<Stmt>("condStmt");
+            auto stmt =
+                result.Nodes.getNodeAs<Expr>("condStmt");
 
-            IfStmt const *ifstmt =
+            auto ifstmt =
                 result.Nodes.getNodeAs<IfStmt>("ifStmt");
 
             SourceManager & sm(result.Context->getSourceManager());
@@ -44,8 +49,8 @@ namespace corct
             }
             else
             {
-                check_ptr(stmt, "stmt");
-                check_ptr(ifstmt, "ifstmt");
+                check_ptr(stmt, "condStmt");
+                check_ptr(ifstmt, "ifStmt");
             }
             return;
             // // run
