@@ -36,7 +36,7 @@ namespace corct
         {
             using namespace clang;
             auto stmt =
-                result.Nodes.getNodeAs<Expr>("condStmt");
+                result.Nodes.getNodeAs<Stmt>("condStmt");
 
             auto ifstmt =
                 result.Nodes.getNodeAs<IfStmt>("ifStmt");
@@ -45,6 +45,7 @@ namespace corct
 
             if (stmt && ifstmt)
             {
+                m_num_if_statements++;
                 print_branch_details(stmt, ifstmt, sm, std::cout);
             }
             else

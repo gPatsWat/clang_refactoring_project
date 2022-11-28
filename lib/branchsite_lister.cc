@@ -17,10 +17,27 @@ print_branch_details(clang::Stmt const * stmt,
   corct::string_t tabs = "\t";
 
   o << "ifStmt:\n"
+    << tabs << "condition:"
     << tabs << get_source_text(stmt->getSourceRange(), sm) << "\n"
+    #ifdef PRINT_SOURCELOC
     << tabs << "callsite source range: "
     << tabs << fullSourceRangeAsString(ifstmt->getSourceRange(), &sm)
+    #endif
     << "\n";
+
+  clang::IfStmt const *  if_iter = ifstmt;
+
+  while(auto elseptr = static_cast<clang::IfStmt const*>(if_iter->getElse())) {
+    o << "elseStmt:\n"
+      << tabs << "condition:"
+      << tabs << get_source_text(elseptr->getCond()->getSourceRange(), sm) << "\n"
+      #ifdef PRINT_SOURCELOC
+      << tabs << "callsite source range: "
+      << tabs << fullSourceRangeAsString(ifstmt->getSourceRange(), &sm)
+      #endif
+      << "\n";
+      if_iter = elseptr;
+  }
 }  // print_if_condition_details
 
 void

@@ -1,6 +1,16 @@
 #include <iostream>
 #include <time.h>
 
+int if_else_branch(int a, int b) {
+    if(a) {
+        return a;
+    }
+    else if(b) {
+        return b;
+    }
+    else return 42;
+}
+
 int foo(int a, int b) {
     std::cout << "standard" << std::endl;
     if(a || b) {
