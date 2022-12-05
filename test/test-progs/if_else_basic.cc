@@ -19,6 +19,16 @@ int foo(int a, int b) {
     else return -1;
 }
 
+int foo2(int a, int b) {
+    std::cout << "standard" << std::endl;
+    if(a || b) {
+        return 5;
+    }
+    else if(a + b) {
+        return -1;
+    }
+}
+
 int foo_branchless(int a, int b) {
     std::cout << "branchless" << std::endl;
     bool c = a || b;

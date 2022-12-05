@@ -9,6 +9,16 @@ cmake -DGTEST_ROOT=../googletest ..
 ./test/test-progs/if_else_basic.cc runs branch version and
 branchless version each n times. This can be profiled with perf. The assembly output is also given which can be analysed to get the exact number of branch instructions present in the binary. This will enable reasoning about how many branches get eliminated, barring, the hardware optimisations which the cpu does.
 
+Clang API nits and grits:
+getElse can return all kinds of statements (you can check by doing clang-check -ast-dump -ast-dump-filter=foo test/test-progs/if_else_basic.cc).
+
+Some of these which can be:
+IfStmt
+CompoundStmt
+ReturnStmt
+
+So, we have to check while traversing a branch whether the node is really what we think it is!
+
 Tools:
 branchsite-lister:
 prints all if-else statements, -DPRINT_SOURCELOC=1 will also print the location in project.
@@ -79,3 +89,5 @@ Fedor Pikus: C++ Branchless Programming videos
 https://github.com/alpbintug/Branchless-programming/tree/master/basicOperations
 
 https://stackoverflow.com/questions/11083066/getting-the-source-behind-clangs-ast
+
+https://github.com/lifting-bits/rellic/blob/master/lib/AST/NestedCondProp.cpp
