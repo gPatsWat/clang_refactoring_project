@@ -18,7 +18,7 @@ print_branch_details(clang::Stmt const * stmt,
 
   o << "ifStmt:\n"
     << tabs << "condition:"
-    // << tabs << get_source_text(stmt->getSourceRange(), sm) << "\n"
+    << tabs << get_source_text(stmt->getSourceRange(), sm).str() << "\n"
     #ifdef PRINT_SOURCELOC
     << tabs << "callsite source range: "
     << tabs << fullSourceRangeAsString(ifstmt->getSourceRange(), &sm)
@@ -43,7 +43,7 @@ print_branch_details(clang::Stmt const * stmt,
       o << elseptr << "\n";
       o << "elseStmt:\n"
         << tabs << "condition:"
-        // << tabs << get_source_text(elseptr->getCond()->getSourceRange(), sm) << "\n"
+        << tabs << get_source_text(elseptr->getCond()->getSourceRange(), sm).str() << "\n"
         #ifdef PRINT_SOURCELOC
         << tabs << "callsite source range: "
         << tabs << fullSourceRangeAsString(ifstmt->getSourceRange(), &sm)
@@ -73,7 +73,7 @@ print_branch_details(clang::Expr const * stmt,
   corct::string_t tabs = "\t";
 
   o << "ifStmt:\n"
-    // << tabs << get_source_text(stmt->getSourceRange(), sm) << "\n"
+    << tabs << get_source_text(stmt->getSourceRange(), sm).str() << "\n"
     << tabs << "callsite source range: "
     << tabs << fullSourceRangeAsString(ifstmt->getSourceRange(), &sm)
     << "\n";

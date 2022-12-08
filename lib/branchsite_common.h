@@ -35,8 +35,9 @@ namespace corct {
     inline auto mk_simple_if_else_return_matcher(std::string const & if_else_bind_name) {
         return ifStmt(unless(isExpansionInSystemHeader()),
                unless(hasAncestor(ifStmt())),
-               hasThen(compoundStmt(hasAnySubstatement(returnStmt()))),
-               hasElse(returnStmt())).bind(if_else_bind_name);
+               hasCondition(stmt().bind("condStmt")),
+               hasThen(compoundStmt(hasAnySubstatement(returnStmt().bind("if_return_stmt")))),
+               hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
     }
 
 } //namespace corct

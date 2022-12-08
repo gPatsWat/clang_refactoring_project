@@ -1,0 +1,1 @@
+ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasCondition(stmt().bind("condStmt")), hasThen(compoundStmt(hasAnySubstatement(returnStmt().bind("if_return_stmt")))),    hasElse(returnStmt().bind("else_return_stmt"))).bind("if_else_bind_name")

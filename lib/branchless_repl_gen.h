@@ -24,7 +24,7 @@ run indicator.
 
 */
 template <typename traits_t>
-class branch_replacement_generator
+class branchless_replacement_generator
     : public clang::ast_matchers::MatchFinder::MatchCallback {
 public:
   // types and constants
@@ -47,7 +47,7 @@ public:
     return ms;
   }
 
-  branch_replacement_generator(replacements_map_t & rep_map,
+  branchless_replacement_generator(replacements_map_t & rep_map,
                                  vec_str const & br_targets,
                                  str_t_cr new_str,
                                  bool const dry_run)
@@ -58,7 +58,7 @@ public:
   {
   }
 
-  virtual ~branch_replacement_generator() {}
+  virtual ~branchless_replacement_generator() {}
 
   replacements_t const & get_replacements(string_t const & bname) const
   {

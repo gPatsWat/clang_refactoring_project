@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/home/gspathak/Desktop/clang_refactoring_project/build/test/test-progs",
+    "command": "/usr/bin/c++ -DCLANG_INC_DIR1=\\\"/usr/bin/../include/c++/v1\\\" -DCLANG_INC_DIR2=\\\"/usr/bin/../lib/clang/11.0.0/include\\\" -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/usr/lib/llvm-11/include  -std=c++14   -fPIC -fvisibility-inlines-hidden -Wall -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Werror=date-time -fno-exceptions -fno-rtti -O0 -o CMakeFiles/if_else_basic.dir/if_else_basic.cc.o -c /home/gspathak/Desktop/clang_refactoring_project/test/test-progs/if_else_basic.cc",
+    "file": "/home/gspathak/Desktop/clang_refactoring_project/test/test-progs/if_else_basic.cc"
+  }
+]
