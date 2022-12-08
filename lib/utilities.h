@@ -266,7 +266,7 @@ compare_vars(clang::VarDecl const * const v1,
  * @warning This function does not obtain the source of a macro/preprocessor expansion.
  * Use get_source_text() for that.
  */
-inline std::string get_source_text_raw(clang::SourceRange range, const clang::SourceManager& sm) {
+inline llvm::StringRef get_source_text_raw(clang::SourceRange range, const clang::SourceManager& sm) {
     return clang::Lexer::getSourceText(clang::CharSourceRange::getCharRange(range), sm, clang::LangOptions());
 }
 
@@ -276,7 +276,7 @@ inline std::string get_source_text_raw(clang::SourceRange range, const clang::So
  *
  * @see get_source_text_raw()
  */
-inline std::string get_source_text(clang::SourceRange range, const clang::SourceManager& sm) {
+inline llvm::StringRef get_source_text(clang::SourceRange range, const clang::SourceManager& sm) {
     clang::LangOptions lo;
 
     // NOTE: sm.getSpellingLoc() used in case the range corresponds to a macro/preprocessed source.

@@ -1,5 +1,9 @@
 # clang_refactoring_project
 
+sudo apt install llvm-11-dev
+sudo apt install clang-11
+sudo apt install libclang-11-dev
+
 /usr/bin/../lib/llvm-10/cmake/
 /usr/bin/../lib/cmake/clang-10/ClangConfig.cmake
 
@@ -24,6 +28,7 @@ branchsite-lister:
 prints all if-else statements, -DPRINT_SOURCELOC=1 will also print the location in project.
 
 TODO: per function analysis should give branch misses and overhead in detail.
+LOOK AT TRANSFORM CODE FOR LOOPCONVERT.CC!!!! IN ORDER TO HANDLE POTENTIALLY CROSS TU REFACTORING
 
 Examples of transformations:
 1. single if-else condition with only returns (no side-effects).

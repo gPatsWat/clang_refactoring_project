@@ -1,7 +1,10 @@
 #include <iostream>
 #include <time.h>
 
+int glob1 = 2, glo = 3;
+
 int if_else_branch(int a, int b) {
+    glo += 4;
     if(a) {
         return a;
     }
@@ -12,11 +15,20 @@ int if_else_branch(int a, int b) {
 }
 
 int foo(int a, int b) {
-    std::cout << "standard" << std::endl;
     if(a || b) {
         return 5;
     }
     else return -1;
+}
+
+int foo3(int a, int b) {
+    std::cout << "standard" << std::endl;
+    if(a + b) {
+
+        std::cout << "hola!" << std::endl;
+        return 5;
+    }
+    else return 4;
 }
 
 int foo2(int a, int b) {

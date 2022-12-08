@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/lib/llvm-10/include/**"
+                "/usr/lib/llvm-11/include/**",
+                "/usr/include/c++/11/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
@@ -14,7 +15,8 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}",
-                    "/usr/lib/llvm-10/include/**"
+                    "/usr/lib/llvm-11/include/**",
+                    "/usr/include/c++/11/**"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

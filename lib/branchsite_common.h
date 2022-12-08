@@ -19,6 +19,26 @@ namespace corct {
                 hasCondition(stmt().bind("condStmt"))).bind("ifStmt");
     }
 
+    /**
+     * @brief matches simple if-else branch with a return statement
+     * somewhere in the then clause and only return and no condition
+     * in else clause.
+     * Eg:
+     *  if(a || b) {
+     *      return 5;
+     *  }
+     *  else return -1;
+     *
+     * ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasThen(compoundStmt(hasAnySubstatement(returnStmt()))), hasElse(returnStmt()))
+     *
+     */
+    inline auto mk_simple_if_else_return_matcher(std::string const & if_else_bind_name) {
+        return ifStmt(unless(isExpansionInSystemHeader()),
+               unless(hasAncestor(ifStmt())),
+               hasThen(compoundStmt(hasAnySubstatement(returnStmt()))),
+               hasElse(returnStmt())).bind(if_else_bind_name);
+    }
+
 } //namespace corct
 
 //end of file
