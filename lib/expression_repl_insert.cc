@@ -50,7 +50,7 @@ gen_new_expression(clang::Stmt * condstmt,
   /*instead of getting return value expression shenanigans just get the
   * source range and do + len("return") i.e. 6 for now
   */
-  std::string if_return_val = if_return_stmt->getSourceRange().getBegin().getLocWithOffset(5).printToString(sm);
+  std::string if_return_val = get_source_text(if_return_stmt->getRetValue()->getSourceRange(), sm).str();
 
   s << cond << " " << if_return_val << "\n";
   std::cout << s.str();
