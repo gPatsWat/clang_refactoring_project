@@ -40,8 +40,12 @@ namespace corct
 
     void run(result_t const &result) override
     {
+      replacement_t rep;
+
       clang::IfStmt *ifstmt = const_cast<clang::IfStmt *>(
           result.Nodes.getNodeAs<clang::IfStmt>(if_bind_name));
+
+      auto *compoundstmt = result.Nodes.getNodeAs<clang::CompoundStmt>("then_compound_stmt");
 
       clang::Stmt *condstmt = const_cast<clang::Stmt *>(
           result.Nodes.getNodeAs<clang::Stmt>("condStmt"));
@@ -61,14 +65,20 @@ namespace corct
 
       clang::SourceManager const &src_manager(
           const_cast<clang::SourceManager &>(result.Context->getSourceManager()));
-      if (ifstmt)
+      if (ifstmt && compoundstmt)
       {
+
 #ifdef DEBUG
         print_branch_details(cond_as_stmt, ifstmt_as_stmt, src_manager, std::cout);
 #endif
+        // branch has side effect expressions
+        if (if_return_stmt == *(compoundstmt->body_begin()))
+          rep = gen_new_expression(condstmt, ifstmt, if_return_stmt,
+                                   else_return_stmt, src_manager);
+        else
+          gen_new_expression(condstmt, compoundstmt, ifstmt, if_return_stmt,
+                             else_return_stmt, src_manager);
 
-        replacement_t rep = gen_new_expression(condstmt, ifstmt, if_return_stmt,
-                                               else_return_stmt, src_manager);
         if (!dry_run_)
         {
           // // use file name to select correct Replacements
@@ -82,6 +92,7 @@ namespace corct
       else
       {
         check_ptr(ifstmt, "ifstmt");
+        check_ptr(compoundstmt, "compoundstmt");
       }
       return;
     } // run

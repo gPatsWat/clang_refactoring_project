@@ -29,14 +29,17 @@ namespace corct {
      *  }
      *  else return -1;
      *
-     * ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasThen(compoundStmt(hasAnySubstatement(returnStmt()))), hasElse(returnStmt()))
-     *
      */
     inline auto mk_simple_if_else_return_matcher(std::string const & if_else_bind_name) {
+        // return ifStmt(unless(isExpansionInSystemHeader()),
+        //        unless(hasAncestor(ifStmt())),
+        //        hasCondition(stmt().bind("condStmt")),
+        //        hasThen(compoundStmt(hasAnySubstatement(returnStmt().bind("if_return_stmt")))),
+        //        hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
         return ifStmt(unless(isExpansionInSystemHeader()),
                unless(hasAncestor(ifStmt())),
                hasCondition(stmt().bind("condStmt")),
-               hasThen(compoundStmt(hasAnySubstatement(returnStmt().bind("if_return_stmt")))),
+               hasThen(compoundStmt(has(returnStmt().bind("if_return_stmt"))).bind("then_compound_stmt")),
                hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
     }
 

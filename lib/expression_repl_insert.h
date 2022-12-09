@@ -25,10 +25,18 @@ class Replacement;
 namespace corct {
 
 clang::tooling::Replacement
-gen_new_expression(clang::Stmt * condstmt,
-                  clang::IfStmt * ifstmt,
-                  clang::ReturnStmt * if_return_stmt,
-                  clang::ReturnStmt * else_return_stmt,
+gen_new_expression(clang::Stmt const * condstmt,
+                  clang::IfStmt const * ifstmt,
+                  clang::ReturnStmt const * if_return_stmt,
+                  clang::ReturnStmt const * else_return_stmt,
+                  clang::SourceManager const & sm);
+
+clang::tooling::Replacement
+gen_new_expression(clang::Stmt const * condstmt,
+                  clang::Stmt const * then_compound_stmt,
+                  clang::IfStmt const * ifstmt,
+                  clang::ReturnStmt const * if_return_stmt,
+                  clang::ReturnStmt const * else_return_stmt,
                   clang::SourceManager const & sm);
 
 // clang::tooling::Replacement

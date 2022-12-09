@@ -17,47 +17,73 @@
 #include <iostream>
 #include <sstream>
 
-namespace corct {
-
-using clang::CallExpr;
-using clang::FunctionDecl;
-using clang::ParmVarDecl;
-using clang::SourceManager;
-using clang::tooling::Replacement;
-
-/**
- * @brief generate replacement for simple if-else-expression
- * assumes that it will only be called by simple is-else-expression matcher.
- *
- * @param f_decl
- * @param new_param_text
- * @param sm
- * @return Replacement
- */
-Replacement
-gen_new_expression(clang::Stmt * condstmt,
-                  clang::IfStmt * ifstmt,
-                  clang::ReturnStmt * if_return_stmt,
-                  clang::ReturnStmt * else_return_stmt,
-                  clang::SourceManager const & sm)
+namespace corct
 {
-  using namespace clang;
 
-  //construct expression
-  std::stringstream s;
+  using clang::CallExpr;
+  using clang::FunctionDecl;
+  using clang::ParmVarDecl;
+  using clang::SourceManager;
+  using clang::tooling::Replacement;
 
-  std::string cond = get_source_text(condstmt->getSourceRange(), sm).str();
-  /*instead of getting return value expression shenanigans just get the
-  * source range and do + len("return") i.e. 6 for now
-  */
-  std::string if_return_val = get_source_text(if_return_stmt->getRetValue()->getSourceRange(), sm).str();
+  /**
+   * @brief generate replacement for simple if-else-expression
+   * assumes that it will only be called by simple is-else-expression matcher.
+   *
+   * @param f_decl
+   * @param new_param_text
+   * @param sm
+   * @return Replacement
+   */
+  Replacement
+  gen_new_expression(clang::Stmt const *condstmt,
+                     clang::IfStmt const *ifstmt,
+                     clang::ReturnStmt const *if_return_stmt,
+                     clang::ReturnStmt const *else_return_stmt,
+                     clang::SourceManager const &sm)
+  {
+    using namespace clang;
 
-  s << cond << " " << if_return_val << "\n";
-  std::cout << s.str();
+    // construct expression
+    std::stringstream s;
 
-  return Replacement();
-}  // gen_new_expression
+    std::string cond = get_source_text(condstmt->getSourceRange(), sm).str();
+    /*instead of getting return value expression shenanigans just get the
+     * source range and do + len("return") i.e. 6 for now
+     */
+    std::string if_return_val = get_source_text(if_return_stmt->getRetValue()->getSourceRange(), sm).str();
+    std::string else_return_val = get_source_text(else_return_stmt->getRetValue()->getSourceRange(), sm).str();
 
-}  // namespace corct
+    s << cond << " " << if_return_val << " " << else_return_val << "\n";
+    std::cout << s.str();
+
+    return Replacement();
+  } // gen_new_expression
+
+  /**
+   * @brief generate replacement for complex if-else-expression
+   * assumes that it will only be called by simple is-else-expression matcher.
+   *
+   * @param condstmt
+   * @param then_compound_stmt
+   * @param ifstmt
+   * @param if_return_stmt
+   * @param else_return_stmt
+   * @param sm
+   * @return clang::tooling::Replacement
+   */
+  clang::tooling::Replacement
+  gen_new_expression(clang::Stmt const *condstmt,
+                     clang::Stmt const *then_compound_stmt,
+                     clang::IfStmt const *ifstmt,
+                     clang::ReturnStmt const *if_return_stmt,
+                     clang::ReturnStmt const *else_return_stmt,
+                     clang::SourceManager const &sm)
+  {
+    std::cout << "then expression contains side effects!\n";
+    return Replacement();
+  }
+
+} // namespace corct
 
 // End of file
