@@ -27,17 +27,7 @@ print_branch_details(clang::Stmt const * stmt,
 
   clang::IfStmt const * if_iter = ifstmt;
 
-  // if(if_iter)
-  // o << if_iter->getElse() << "\n";
-  // if_iter = static_cast<clang::IfStmt const *>(if_iter->getElse());
-  // if(if_iter)
-  // o << if_iter->getElse() << "\n";
-  // // if(if_iter->getElse() != nullptr) {
-  //   if_iter = static_cast<clang::IfStmt const *>(if_iter->getElse());
-  //   if(if_iter)
-  //   o << if_iter->getElse() << "\n";
-  // // }
-
+  //TODO: complete this
   while(if_iter) {
     if(auto elseptr = clang::dyn_cast_or_null<clang::IfStmt const>(if_iter->getElse())) {
       o << elseptr << "\n";
@@ -55,12 +45,6 @@ print_branch_details(clang::Stmt const * stmt,
       break;
   }
 
-  // if(clang::Stmt const * Else = ifstmt->getElse()) {
-  //   if(auto *CS = clang::dyn_cast<clang::CompoundStmt>(Else)) {
-
-  //   }
-
-  // }
 }  // print_if_condition_details
 
 void

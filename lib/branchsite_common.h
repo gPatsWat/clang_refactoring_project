@@ -15,27 +15,47 @@ namespace corct {
      */
     inline auto mk_if_matcher() {
         return ifStmt(unless(isExpansionInSystemHeader()),
-                unless(hasAncestor(ifStmt())),
-                hasCondition(stmt().bind("condStmt"))).bind("ifStmt");
+        unless(hasAncestor(ifStmt())),
+        hasCondition(stmt().bind("condStmt")),
+        hasThen(stmt().bind("if_then_stmt")),
+        hasElse(stmt().bind("else_stmt"))).bind("if_else_bind_name");
     }
 
     /**
-     * @brief matches simple if-else branch with a return statement
-     * somewhere in the then clause and only return and no condition
-     * in else clause.
+     * @brief matches if-simple-else branch
      * Eg:
      *  if(a || b) {
+     *      //can have side effects
      *      return 5;
      *  }
      *  else return -1;
      *
      */
-    inline auto mk_simple_if_else_return_matcher(std::string const & if_else_bind_name) {
+    inline auto mk_if_simple_else_matcher(std::string const & if_else_bind_name) {
         // return ifStmt(unless(isExpansionInSystemHeader()),
         //        unless(hasAncestor(ifStmt())),
         //        hasCondition(stmt().bind("condStmt")),
         //        hasThen(compoundStmt(hasAnySubstatement(returnStmt().bind("if_return_stmt")))),
         //        hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
+        return ifStmt(unless(isExpansionInSystemHeader()),
+               unless(hasAncestor(ifStmt())),
+               hasCondition(stmt().bind("condStmt")),
+               hasThen(compoundStmt(has(returnStmt().bind("if_return_stmt"))).bind("then_compound_stmt")),
+               hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
+    }
+
+    /**
+     * @brief matches simple-if-else branch
+     * Eg:
+     *  if(a || b)
+     *      return 5;
+     *  else {
+     *      can have side effects
+     *      return -1;
+     *  }
+     *
+     */
+    inline auto mk_simple_if_else_matcher(std::string const & if_else_bind_name) {
         return ifStmt(unless(isExpansionInSystemHeader()),
                unless(hasAncestor(ifStmt())),
                hasCondition(stmt().bind("condStmt")),
