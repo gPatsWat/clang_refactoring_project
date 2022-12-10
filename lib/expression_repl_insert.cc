@@ -44,8 +44,8 @@ namespace corct
   {
     using namespace clang;
 
-    // construct expression
-    std::stringstream s;
+    // stringstream for easy construction of branchless expression
+    std::stringstream rep_str;
 
     std::string cond = get_source_text(condstmt->getSourceRange(), sm).str();
     /*instead of getting return value expression shenanigans just get the
@@ -54,10 +54,16 @@ namespace corct
     std::string if_return_val = get_source_text(if_return_stmt->getRetValue()->getSourceRange(), sm).str();
     std::string else_return_val = get_source_text(else_return_stmt->getRetValue()->getSourceRange(), sm).str();
 
-    s << cond << " " << if_return_val << " " << else_return_val << "\n";
-    std::cout << s.str();
+    // construct branchless expression
+    rep_str << "(" << cond << ")*" << "(" << if_return_val << ")"
+      << " + " << "!(" << cond << ")*" << "(" << else_return_val << ");";
 
-    return Replacement();
+    std::cout << rep_str.str() << std::endl;
+    dumpSourceRange(ifstmt->getSourceRange(), &sm);
+
+    //add offset of one for simple else return (without braces)
+    return replace_source_range_with_offset(sm, ifstmt->getSourceRange(), 1, rep_str.str());
+
   } // gen_new_expression
 
   /**

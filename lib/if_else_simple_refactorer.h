@@ -63,7 +63,7 @@ namespace corct
           result.Nodes.getNodeAs<clang::Stmt>("condStmt");
 #endif
 
-      clang::SourceManager const &src_manager(
+      clang::SourceManager &src_manager(
           const_cast<clang::SourceManager &>(result.Context->getSourceManager()));
       if (ifstmt && compoundstmt)
       {
@@ -76,17 +76,17 @@ namespace corct
           rep = gen_new_expression(condstmt, ifstmt, if_return_stmt,
                                    else_return_stmt, src_manager);
         else
-          gen_new_expression(condstmt, compoundstmt, ifstmt, if_return_stmt,
-                             else_return_stmt, src_manager);
+          rep = gen_new_expression(condstmt, compoundstmt, ifstmt, if_return_stmt,
+                                   else_return_stmt, src_manager);
 
         if (!dry_run_)
         {
-          // // use file name to select correct Replacements
-          // auto &reps = find_repls(ifstmt, src_manager, rep_map_);
-          // if (reps.add(rep))
-          // {
-          //   HERE("add replacement failed");
-          // }
+          // use file name to select correct Replacements
+          auto &reps = find_repls(ifstmt, src_manager, rep_map_);
+          if (reps.add(rep))
+          {
+            HERE("add replacement failed");
+          }
         }
       }
       else

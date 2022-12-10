@@ -34,6 +34,25 @@ replace_source_range(clang::SourceManager const & sm,
   return replacement_t(sm, start_loc, length, replacement);
 }
 
+/** \brief Replace indicated source range with given text with offset.
+*/
+inline replacement_t
+replace_source_range_with_offset(clang::SourceManager const & sm,
+                     clang::SourceRange const & range,
+                     int offset,
+                     clang::StringRef const replacement)
+{
+  using clang::SourceLocation;
+  SourceLocation start_loc = range.getBegin();  // Start of range
+  SourceLocation start_end_loc =
+      range.getEnd();  // Start of last token at end of range
+  clang::LangOptions lopt;
+  SourceLocation end_loc(clang::Lexer::getLocForEndOfToken(
+      start_end_loc, 0, sm, lopt));  // True end of range
+  unsigned int length = sm.getFileOffset(end_loc) - sm.getFileOffset(start_loc);
+  return replacement_t(sm, start_loc, length + offset, replacement);
+}
+
 /** Replace exactly the indicated source range--this does not
    compute to the end of the last token in the source range.
    Sometimes that's what I want \_:~_/ */
