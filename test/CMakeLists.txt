@@ -12,6 +12,7 @@ FetchContent_MakeAvailable(googletest)
 set( CORCT_UNITTESTS_SRC
 #   lib/callsite_expander_test.cc
   lib/callsite_lister_test.cc
+  lib/if_else_simple_refactorer_test.cc
 #   lib/clang_utilities_test.cc
 #   lib/function_common_test.cc
 #   lib/function_def_lister_test.cc

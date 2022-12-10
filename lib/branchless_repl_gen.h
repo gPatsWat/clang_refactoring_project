@@ -36,14 +36,14 @@ public:
   virtual void run(const result_t & result) override = 0;
 
   /**\brief Generate an AST matcher for target branch. */
-  virtual matcher_t mk_branch_matcher(str_t_cr if_else_bind_name) const = 0;
+  virtual matcher_t mk_branch_matcher() const = 0;
 
   /** \brief Get a set of branch matchers to which derived class will respond.
    */
   matchers_t branch_matchers() const
   {
     matchers_t ms;
-    for(auto const & t : br_targets_) { ms.push_back(mk_branch_matcher(t)); }
+    for(auto const & t : br_targets_) { ms.push_back(mk_branch_matcher()); }
     return ms;
   }
 

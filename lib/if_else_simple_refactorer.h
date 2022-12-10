@@ -188,7 +188,7 @@ namespace corct
       return;
     } // run
 
-    matcher_t mk_branch_matcher(str_t_cr if_else_bind_name) const override
+    matcher_t mk_branch_matcher() const override
     {
       return mk_if_matcher();
     }

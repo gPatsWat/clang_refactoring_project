@@ -108,7 +108,7 @@ main(int argc, const char ** argv)
 
 
   // sort out target functions
-  vec_str targ_fns(split(target_func_string, ','));
+  vec_str targ_fns(split("", ','));
 
   corct::if_else_simple_refactorer if_refactorer(rep_map, targ_fns,
                                                 new_func_param_string, dry_run);
@@ -126,7 +126,7 @@ main(int argc, const char ** argv)
     //   f_expander.fn_matchers();
 
 //   for(auto & m : branch_matchers) { finder.addMatcher(m, &if_refactorer); }
-finder.addMatcher(if_refactorer.mk_branch_matcher("simple_if_else_return"), &if_refactorer);
+finder.addMatcher(if_refactorer.mk_branch_matcher(), &if_refactorer);
 
   tool.runAndSave(newFrontendActionFactory(&finder).get());
 
