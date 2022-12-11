@@ -12,23 +12,46 @@ string_t const new_param = "";
 string_t const fname = "input.cc";
 
 template <typename Tester>
-bool
-run_case_iesr(string_t const& code, Tester &t, replacements_t const & reps_exp)
+bool run_case_iesr(string_t const &code, Tester &t, replacements_t const &reps_exp)
 {
     ASTUPtr ast;
-    ASTContext * pctx;
-    TranslationUnitDecl * decl;
+    ASTContext *pctx;
+    TranslationUnitDecl *decl;
     std::tie(ast, pctx, decl) = prep_code(code);
     finder_t finder;
     finder.addMatcher(t.mk_branch_matcher(), &t);
 
     finder.matchAST(*pctx);
 
-    replacements_t const & reps(t.get_replacements(fname));
+    replacements_t const &reps(t.get_replacements(fname));
     bool const size_ok(reps_exp.size() == reps.size());
 
     EXPECT_EQ(reps_exp.size(), reps.size());
-    return size_ok;
+
+    bool const reps_match = reps_exp == reps;
+
+    replacements_t::const_iterator ri = reps.begin(), ei = reps_exp.begin();
+
+    for (; ri != reps.end() && ei != reps_exp.end(); ++ri, ++ei)
+    {
+        EXPECT_EQ(ei->toString(), ri->toString());
+        EXPECT_EQ(ei->getReplacementText(), ri->getReplacementText());
+    }
+
+    if (!reps_match)
+    {
+        std::cout << "reps disagree:\n";
+        replacements_t::const_iterator ri = reps.begin(), ei = reps_exp.begin();
+        for (; ri != reps.end() && ei != reps_exp.end(); ++ri, ++ei)
+        {
+            std::cout << "expected: " << ei->toString()
+                      << ", actual: " << ri->toString() << "\n";
+        }
+    }
+
+    EXPECT_EQ(reps_exp, reps);
+
+    return size_ok && reps_match;
 }
 
 TEST(if_else_refactor, instantiate)
@@ -38,24 +61,26 @@ TEST(if_else_refactor, instantiate)
     bool const dry_run(false);
     IESR(reps, ftargs, new_param, dry_run);
     EXPECT_TRUE(true);
-} //instantiate
+} // instantiate
 
 TEST(if_else_refactor, simple_if_simple_else)
 {
     string_t const code =
-    "int simple_if_else_simple_return(int a3, int b3) \
-    { \
-        if (a3 || b3) return a3; \
-     else \
-     return b3; \
-    } \
-    ";
+        "int simple_if_else_simple_return (int a3, int b3) {if(a3 || b3)return a3;else return b3;}";
+
+    string_t const refactored_expr =
+        "(a3 || b3)*(a3) + !(a3 || b3)*(b3);";
 
     replacements_map_t reps;
     vec_str ftargs = {};
     bool const dry_run(false);
     IESR iesr(reps, ftargs, new_param, dry_run);
     replacements_t exp_repls;
+
+    if (exp_repls.add({fname, 51u, 37u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
 
     run_case_iesr(code, iesr, exp_repls);
 }
