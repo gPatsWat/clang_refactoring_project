@@ -19,7 +19,13 @@ bool run_case_iesr(string_t const &code, Tester &t, replacements_t const &reps_e
     TranslationUnitDecl *decl;
     std::tie(ast, pctx, decl) = prep_code(code);
     finder_t finder;
-    finder.addMatcher(t.mk_branch_matcher(), &t);
+    corct::if_else_simple_refactorer::matchers_t branch_matchers =
+        t.branch_matchers();
+
+    for (auto &m : branch_matchers)
+    {
+        finder.addMatcher(m, &t);
+    }
 
     finder.matchAST(*pctx);
 
@@ -59,14 +65,58 @@ TEST(if_else_refactor, instantiate)
     replacements_map_t reps;
     vec_str ftargs = {};
     bool const dry_run(false);
-    IESR(reps, ftargs, new_param, dry_run);
+    IESR(reps, dry_run);
     EXPECT_TRUE(true);
 } // instantiate
 
 TEST(if_else_refactor, simple_if_simple_else)
 {
     string_t const code =
-        "int simple_if_else_simple_return (int a3, int b3) {if(a3 || b3)return a3;else return b3;}";
+        "int simple_if_else_simple_return (int a1, int b1) {if(a1 || b1)return a1;else return b1;}";
+
+    string_t const refactored_expr =
+        "(a1 || b1)*(a1) + !(a1 || b1)*(b1);";
+
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
+
+    if (exp_repls.add({fname, 51u, 37u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
+
+    run_case_iesr(code, iesr, exp_repls);
+}
+
+TEST(if_else_refactor, if_simple_else)
+{
+    string_t const code =
+        "int if_simple_else (int a2, int b2) {if(a2 || b2){return a2;}else return b2;}";
+
+    string_t const refactored_expr =
+        "(a2 || b2)*(a2) + !(a2 || b2)*(b2);";
+
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
+
+    if (exp_repls.add({fname, 37u, 39u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
+
+    run_case_iesr(code, iesr, exp_repls);
+}
+
+TEST(if_else_refactor, simple_if_else)
+{
+    string_t const code =
+        "int simple_if_else (int a3, int b3) {if(a3 || b3)return a3;else{return b3;}}";
 
     string_t const refactored_expr =
         "(a3 || b3)*(a3) + !(a3 || b3)*(b3);";
@@ -74,10 +124,10 @@ TEST(if_else_refactor, simple_if_simple_else)
     replacements_map_t reps;
     vec_str ftargs = {};
     bool const dry_run(false);
-    IESR iesr(reps, ftargs, new_param, dry_run);
+    IESR iesr(reps, dry_run);
     replacements_t exp_repls;
 
-    if (exp_repls.add({fname, 51u, 37u, refactored_expr}))
+    if (exp_repls.add({fname, 37u, 38u, refactored_expr}))
     {
         HERE("add replacement failed")
     }

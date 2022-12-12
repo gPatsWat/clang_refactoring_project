@@ -110,8 +110,7 @@ main(int argc, const char ** argv)
   // sort out target functions
   vec_str targ_fns(split("", ','));
 
-  corct::if_else_simple_refactorer if_refactorer(rep_map, targ_fns,
-                                                new_func_param_string, dry_run);
+  corct::if_else_simple_refactorer if_refactorer(rep_map, dry_run);
 
 //   corct::expand_callsite s_expander(rep_map, targ_fns, new_func_arg_string,
 //                                     dry_run);
@@ -121,12 +120,7 @@ main(int argc, const char ** argv)
   corct::if_else_simple_refactorer::matchers_t branch_matchers =
       if_refactorer.branch_matchers();
 
-  //TODO: ADD LOCAL VARIABLE ADDER HERE
-//   corct::function_signature_expander::matchers_t exp_matchers =
-    //   f_expander.fn_matchers();
-
-//   for(auto & m : branch_matchers) { finder.addMatcher(m, &if_refactorer); }
-finder.addMatcher(if_refactorer.mk_branch_matcher(), &if_refactorer);
+  for(auto  & m : branch_matchers) { finder.addMatcher(m, &if_refactorer); }
 
   tool.runAndSave(newFrontendActionFactory(&finder).get());
 

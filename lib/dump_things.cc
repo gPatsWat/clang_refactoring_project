@@ -108,7 +108,7 @@ dumpSourceRange(clang::SourceRange R,
     std::cout << ", ";
     dumpLocation(R.getEnd(), sm);
   }
-  std::cout << ">";
+  std::cout << ">\n";
   return;
 }  // dumpSourceRange
 

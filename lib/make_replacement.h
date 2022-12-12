@@ -39,7 +39,7 @@ replace_source_range(clang::SourceManager const & sm,
 inline replacement_t
 replace_source_range_with_offset(clang::SourceManager const & sm,
                      clang::SourceRange const & range,
-                     int offset,
+                     unsigned int offset,
                      clang::StringRef const replacement)
 {
   using clang::SourceLocation;

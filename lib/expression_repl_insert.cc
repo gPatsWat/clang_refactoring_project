@@ -36,6 +36,48 @@ namespace corct
    * @return Replacement
    */
   Replacement
+  gen_new_expression_with_offset(clang::Stmt const *condstmt,
+                     clang::IfStmt const *ifstmt,
+                     clang::ReturnStmt const *if_return_stmt,
+                     clang::ReturnStmt const *else_return_stmt,
+                     unsigned int offset,
+                     clang::SourceManager const &sm)
+  {
+    using namespace clang;
+
+    // stringstream for easy construction of branchless expression
+    std::stringstream rep_str;
+
+    std::string cond = get_source_text(condstmt->getSourceRange(), sm).str();
+    /*instead of getting return value expression shenanigans just get the
+     * source range and do + len("return") i.e. 6 for now
+     */
+    std::string if_return_val = get_source_text(if_return_stmt->getRetValue()->getSourceRange(), sm).str();
+    std::string else_return_val = get_source_text(else_return_stmt->getRetValue()->getSourceRange(), sm).str();
+
+    // construct branchless expression
+    rep_str << "(" << cond << ")*" << "(" << if_return_val << ")"
+      << " + " << "!(" << cond << ")*" << "(" << else_return_val << ");";
+
+    std::cout << rep_str.str() << std::endl;
+    // dumpSourceRange(ifstmt->getSourceRange(), &sm);
+
+    //add offset of one for simple else return (without braces)
+
+    return replace_source_range_with_offset(sm, ifstmt->getSourceRange(), offset, rep_str.str());
+
+  } // gen_new_expression_with_offset
+
+  /**
+   * @brief generate replacement for simple if-else-expression
+   * assumes that it will only be called by simple is-else-expression matcher.
+   *
+   * @param f_decl
+   * @param new_param_text
+   * @param sm
+   * @return Replacement
+   */
+  Replacement
   gen_new_expression(clang::Stmt const *condstmt,
                      clang::IfStmt const *ifstmt,
                      clang::ReturnStmt const *if_return_stmt,
@@ -59,10 +101,12 @@ namespace corct
       << " + " << "!(" << cond << ")*" << "(" << else_return_val << ");";
 
     std::cout << rep_str.str() << std::endl;
-    dumpSourceRange(ifstmt->getSourceRange(), &sm);
+    // dumpSourceRange(ifstmt->getSourceRange(), &sm);
 
     //add offset of one for simple else return (without braces)
-    return replace_source_range_with_offset(sm, ifstmt->getSourceRange(), 1, rep_str.str());
+    // return replacement_t(sm, clang::CharSourceRange::getTokenRange(ifstmt->getSourceRange()), rep_str.str());
+
+    return replace_source_range_with_offset(sm, ifstmt->getSourceRange(), 0, rep_str.str());
 
   } // gen_new_expression
 

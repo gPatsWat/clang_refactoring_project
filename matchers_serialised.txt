@@ -1,3 +1,75 @@
 ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasCondition(stmt().bind("condStmt")), hasThen(compoundStmt(hasAnySubstatement(returnStmt().bind("if_return_stmt")))),    hasElse(returnStmt().bind("else_return_stmt"))).bind("if_else_bind_name")
 
-ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasCondition(stmt().bind("condStmt")), hasThen(compoundStmt(returnStmt().bind("if_return_stmt"))),    hasElse(returnStmt().bind("else_return_stmt"))).bind("if_else_bind_name")
+ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasCondition(stmt().bind("condStmt")), hasThen(stmt().bind("then_stmt")),    hasElse(stmt().bind("else_stmt"))).bind("if_else_bind_name")
+
+if_simple_else:
+ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasCondition(stmt().bind("condStmt")), hasThen(compoundStmt(has(returnStmt().bind("if_return_stmt"))).bind("then_compound_stmt")), hasElse(returnStmt().bind("else_return_stmt"))).bind("if_else_bind_name")
+
+ifStmt(unless(isExpansionInSystemHeader()), unless(hasAncestor(ifStmt())), hasCondition(stmt().bind("condStmt")), hasThen(returnStmt().bind("if_return_stmt")),            hasElse(returnStmt().bind("else_return_stmt"))).bind("if_else_bind_name")
+
+if() {
+
+}
+else {
+
+}
+
+if()
+  return
+else
+  return
+
+
+clang::IfStmt *ifstmt = const_cast<clang::IfStmt *>(
+          result.Nodes.getNodeAs<clang::IfStmt>(if_bind_name));
+
+      auto *compoundstmt = result.Nodes.getNodeAs<clang::CompoundStmt>("then_compound_stmt");
+
+      clang::Stmt *condstmt = const_cast<clang::Stmt *>(
+          result.Nodes.getNodeAs<clang::Stmt>("condStmt"));
+
+      clang::ReturnStmt *if_return_stmt = const_cast<clang::ReturnStmt *>(
+          result.Nodes.getNodeAs<clang::ReturnStmt>("if_return_stmt"));
+
+      clang::ReturnStmt *else_return_stmt = const_cast<clang::ReturnStmt *>(
+          result.Nodes.getNodeAs<clang::ReturnStmt>("else_return_stmt"));
+
+#ifdef DEBUG
+      auto ifstmt_as_stmt =
+          result.Nodes.getNodeAs<clang::IfStmt>(if_bind_name);
+      auto cond_as_stmt =
+          result.Nodes.getNodeAs<clang::Stmt>("condStmt");
+#endif
+
+      clang::SourceManager &src_manager(
+          const_cast<clang::SourceManager &>(result.Context->getSourceManager()));
+      if (ifstmt && compoundstmt)
+      {
+
+#ifdef DEBUG
+        print_branch_details(cond_as_stmt, ifstmt_as_stmt, src_manager, std::cout);
+#endif
+        // branch has side effect expressions
+        if (if_return_stmt == *(compoundstmt->body_begin()))
+          rep = gen_new_expression(condstmt, ifstmt, if_return_stmt,
+                                   else_return_stmt, src_manager);
+        else
+          rep = gen_new_expression(condstmt, compoundstmt, ifstmt, if_return_stmt,
+                                   else_return_stmt, src_manager);
+
+        if (!dry_run_)
+        {
+          // use file name to select correct Replacements
+          auto &reps = find_repls(ifstmt, src_manager, rep_map_);
+          if (reps.add(rep))
+          {
+            HERE("add replacement failed");
+          }
+        }
+      }
+      else
+      {
+        check_ptr(ifstmt, "ifstmt");
+        check_ptr(compoundstmt, "compoundstmt");
+      }
+      return;

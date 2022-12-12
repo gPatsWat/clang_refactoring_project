@@ -31,7 +31,7 @@ namespace corct {
      *  else return -1;
      *
      */
-    inline auto mk_if_simple_else_matcher(std::string const & if_else_bind_name) {
+    inline auto mk_if_simple_else_matcher() {
         // return ifStmt(unless(isExpansionInSystemHeader()),
         //        unless(hasAncestor(ifStmt())),
         //        hasCondition(stmt().bind("condStmt")),
@@ -41,7 +41,7 @@ namespace corct {
                unless(hasAncestor(ifStmt())),
                hasCondition(stmt().bind("condStmt")),
                hasThen(compoundStmt(has(returnStmt().bind("if_return_stmt"))).bind("then_compound_stmt")),
-               hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
+               hasElse(returnStmt().bind("else_return_stmt"))).bind("if_simple_else_bind_name");
     }
 
     /**
@@ -55,12 +55,28 @@ namespace corct {
      *  }
      *
      */
-    inline auto mk_simple_if_else_matcher(std::string const & if_else_bind_name) {
+    inline auto mk_simple_if_else_matcher() {
         return ifStmt(unless(isExpansionInSystemHeader()),
                unless(hasAncestor(ifStmt())),
                hasCondition(stmt().bind("condStmt")),
-               hasThen(compoundStmt(has(returnStmt().bind("if_return_stmt"))).bind("then_compound_stmt")),
-               hasElse(returnStmt().bind("else_return_stmt"))).bind(if_else_bind_name);
+               hasThen(returnStmt().bind("if_return_stmt")),
+               hasElse(compoundStmt(has(returnStmt().bind("else_return_stmt"))).bind("else_compound_stmt"))).bind("simple_if_else_bind_name");
+    }
+
+    /**
+     * @brief matches simple-if-simple-else branch
+     * Eg:
+     *  if(a || b)
+     *      return 5;
+     *  else
+     *      return -1;
+     */
+    inline auto mk_simple_if_simple_else_matcher() {
+        return ifStmt(unless(isExpansionInSystemHeader()),
+               unless(hasAncestor(ifStmt())),
+               hasCondition(stmt().bind("condStmt")),
+               hasThen(returnStmt().bind("if_return_stmt")),
+               hasElse(returnStmt().bind("else_return_stmt"))).bind("simple_if_simple_else_bind_name");
     }
 
 } //namespace corct

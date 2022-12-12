@@ -51,7 +51,7 @@ namespace corct
       return false;
     }
 
-    bool check_simple_return(clang::Stmt *stmt)
+    bool check_only_return(clang::Stmt *stmt)
     {
 
       if (auto retstmt = clang::dyn_cast_or_null<clang::ReturnStmt>(stmt))
@@ -68,17 +68,39 @@ namespace corct
     {
       replacement_t rep;
 
+      bool simple_if = false;
+      bool simple_else = false;
+      bool two_branches = true;
+
       clang::SourceManager &src_manager(
           const_cast<clang::SourceManager &>(result.Context->getSourceManager()));
 
-      clang::IfStmt *ifstmt = const_cast<clang::IfStmt *>(
-          result.Nodes.getNodeAs<clang::IfStmt>(if_bind_name));
+      clang::IfStmt *ifstmt;
+      // try binding ifstmt node against all matcher bind names
+
+      if ((ifstmt = const_cast<clang::IfStmt *>(
+               result.Nodes.getNodeAs<clang::IfStmt>("if_else_bind_name"))))
+      {
+        // do nothing
+      }
+      else if ((ifstmt = const_cast<clang::IfStmt *>(
+                    result.Nodes.getNodeAs<clang::IfStmt>("if_simple_else_bind_name"))))
+      {
+        simple_else = true;
+      }
+      else if ((ifstmt = const_cast<clang::IfStmt *>(
+                    result.Nodes.getNodeAs<clang::IfStmt>("simple_if_else_bind_name"))))
+      {
+        simple_if = true;
+      }
+      else if ((ifstmt = const_cast<clang::IfStmt *>(
+                    result.Nodes.getNodeAs<clang::IfStmt>("simple_if_simple_else_bind_name"))))
+      {
+        simple_if = simple_else = true;
+      }
 
       if (ifstmt)
       {
-        bool simple_if_then = false;
-        bool simple_else_then = false;
-        bool two_branches = true;
 
         auto if_then_stmt = clang::dyn_cast_or_null<clang::CompoundStmt>(ifstmt->getThen());
         clang::ReturnStmt *if_return_stmt = nullptr;
@@ -96,7 +118,6 @@ namespace corct
           if (check_simple_return(if_then_stmt))
           {
             std::cout << "compound if_then has only return, safe to convert" << std::endl;
-            simple_if_then = true;
             if_return_stmt = clang::dyn_cast_or_null<clang::ReturnStmt>(*(if_then_stmt->body_begin()));
           }
           else
@@ -106,10 +127,9 @@ namespace corct
         }
         else
         {
-          if (check_simple_return(ifstmt->getThen()))
+          if (check_only_return(ifstmt->getThen()))
           {
             std::cout << "simple if_then is simple return" << std::endl;
-            simple_if_then = true;
             if_return_stmt = clang::dyn_cast_or_null<clang::ReturnStmt>(ifstmt->getThen());
           }
           else
@@ -131,7 +151,6 @@ namespace corct
           if (check_simple_return(else_then_stmt))
           {
             std::cout << "compound else_then has only return, safe to convert" << std::endl;
-            simple_else_then = true;
             else_return_stmt = clang::dyn_cast_or_null<clang::ReturnStmt>(*(else_then_stmt->body_begin()));
           }
           else
@@ -149,10 +168,9 @@ namespace corct
           }
           else
           {
-            if (check_simple_return(ifstmt->getElse()))
+            if (check_only_return(ifstmt->getElse()))
             {
               std::cout << "simple else_then has only return, safe to convert" << std::endl;
-              simple_else_then = true;
               else_return_stmt = clang::dyn_cast_or_null<clang::ReturnStmt>(ifstmt->getElse());
             }
             else
@@ -162,19 +180,51 @@ namespace corct
           }
         }
 
-        if (simple_if_then && simple_else_then && two_branches)
+        clang::Stmt *condstmt = const_cast<clang::Stmt *>(
+            result.Nodes.getNodeAs<clang::Stmt>("condStmt"));
+
+        if (simple_if && simple_else && two_branches)
         {
-          clang::Stmt *condstmt = const_cast<clang::Stmt *>(
-              result.Nodes.getNodeAs<clang::Stmt>("condStmt"));
-
-          rep = gen_new_expression(condstmt, ifstmt, if_return_stmt, else_return_stmt, src_manager);
-
+          // give offset 1 as expression is simple_if and simple_else to include the semicolon
+          rep = gen_new_expression_with_offset(condstmt, ifstmt, if_return_stmt, else_return_stmt, 1u, src_manager);
           if (!dry_run_)
           {
             // use file name to select correct Replacements
             auto &reps = find_repls(ifstmt, src_manager, rep_map_);
-            if (reps.add(rep))
+            if (auto e = reps.add(rep))
             {
+              // llvm::outs() << e;
+              std::cout << "rep fp: " << rep.getFilePath().str() << "\nreps file path: " << reps.begin()->getFilePath().str() << std::endl;
+              HERE("add replacement failed");
+            }
+          }
+        }
+        else if (simple_if && two_branches)
+        {
+          rep = gen_new_expression(condstmt, ifstmt, if_return_stmt, else_return_stmt, src_manager);
+          if (!dry_run_)
+          {
+            // use file name to select correct Replacements
+            auto &reps = find_repls(ifstmt, src_manager, rep_map_);
+            if (auto e = reps.add(rep))
+            {
+              // llvm::outs() << e;
+              std::cout << "rep fp: " << rep.getFilePath().str() << "\nreps file path: " << reps.begin()->getFilePath().str() << std::endl;
+              HERE("add replacement failed");
+            }
+          }
+        }
+        else if (simple_else && two_branches)
+        {
+          rep = gen_new_expression_with_offset(condstmt, ifstmt, if_return_stmt, else_return_stmt, 1u, src_manager);
+          if (!dry_run_)
+          {
+            // use file name to select correct Replacements
+            auto &reps = find_repls(ifstmt, src_manager, rep_map_);
+            if (auto e = reps.add(rep))
+            {
+              // llvm::outs() << e;
+              std::cout << "rep fp: " << rep.getFilePath().str() << "\nreps file path: " << reps.begin()->getFilePath().str() << std::endl;
               HERE("add replacement failed");
             }
           }
@@ -188,9 +238,9 @@ namespace corct
       return;
     } // run
 
-    matcher_t mk_branch_matcher() const override
+    matchers_t mk_branch_matcher() const override
     {
-      return mk_if_matcher();
+      return {mk_if_matcher(), mk_if_simple_else_matcher(), mk_simple_if_else_matcher(), mk_simple_if_simple_else_matcher()};
     }
 
     /** \brief Ctor
@@ -200,10 +250,8 @@ namespace corct
       \param dry_run: unsure about all this?
        */
     if_else_simple_refactorer(replacements_map_t &rep_map,
-                              vec_str const &targ_fns,
-                              string_t const &new_param,
                               bool const dry_run)
-        : Base(rep_map, targ_fns, new_param, dry_run)
+        : Base(rep_map, dry_run)
     {
     } // ctor
   };  // if_else_simple_refactorer

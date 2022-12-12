@@ -25,6 +25,14 @@ class Replacement;
 namespace corct {
 
 clang::tooling::Replacement
+gen_new_expression_with_offset(clang::Stmt const *condstmt,
+                     clang::IfStmt const *ifstmt,
+                     clang::ReturnStmt const *if_return_stmt,
+                     clang::ReturnStmt const *else_return_stmt,
+                     unsigned int offset,
+                     clang::SourceManager const &sm);
+
+clang::tooling::Replacement
 gen_new_expression(clang::Stmt const * condstmt,
                   clang::IfStmt const * ifstmt,
                   clang::ReturnStmt const * if_return_stmt,
@@ -38,22 +46,6 @@ gen_new_expression(clang::Stmt const * condstmt,
                   clang::ReturnStmt const * if_return_stmt,
                   clang::ReturnStmt const * else_return_stmt,
                   clang::SourceManager const & sm);
-
-// clang::tooling::Replacement
-// gen_new_call(clang::CallExpr * call_expr,
-//              clang::FunctionDecl * func_decl,
-//              std::string const & new_arg_text,
-//              clang::SourceManager const & sm,
-//              bool const verbose = false);
-
-// clang::tooling::Replacement
-// gen_signature_repl(clang::FunctionDecl * f_decl,
-//                    std::string const & old_name,
-//                    std::string const & type_name,
-//                    std::string const & new_param,
-//                    clang::SourceManager const & sm,
-//                    bool const verbose = false);
-
 }  // namespace corct
 
 #endif  // include guard
