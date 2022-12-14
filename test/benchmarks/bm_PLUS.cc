@@ -1,8 +1,7 @@
 #include <iostream>
 #include "benchmark/benchmark.h"
 
-// Define another benchmark
-void BM_false_branch(benchmark::State& state) {
+void BM_PLUS_branch(benchmark::State& state) {
         srand(1);
         const unsigned int N = state.range(0);
         std::vector<unsigned long> v1(N), v2(N);
@@ -21,7 +20,7 @@ void BM_false_branch(benchmark::State& state) {
         for(auto _ : state) {
                 unsigned long a1 = 0, a2 = 0;
                 for(size_t i = 0;i < N;++i) {
-                        if(b1[i] || b2[i]) {
+                        if(bool(b1[i]) + bool(b2[i])) {
                                 a1 += p1[i];
                         }
                         else {
@@ -34,6 +33,7 @@ void BM_false_branch(benchmark::State& state) {
         }
         state.SetItemsProcessed(N*state.iterations());
 }
-BENCHMARK(BM_false_branch)->Range(8, 8<<10)->MeasureProcessCPUTime()->UseRealTime();
+
+BENCHMARK(BM_PLUS_branch)->Arg(1000000)->MeasureProcessCPUTime()->UseRealTime();
 
 BENCHMARK_MAIN();
