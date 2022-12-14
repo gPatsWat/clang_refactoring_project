@@ -65,7 +65,7 @@ TEST(if_else_refactor, instantiate)
     replacements_map_t reps;
     vec_str ftargs = {};
     bool const dry_run(false);
-    IESR(reps, dry_run);
+    IESR give_me_a_name(reps, dry_run);
     EXPECT_TRUE(true);
 } // instantiate
 
@@ -91,68 +91,68 @@ TEST(if_else_refactor, simple_if_simple_else)
     run_case_iesr(code, iesr, exp_repls);
 }
 
-// TEST(if_else_refactor, if_simple_else)
-// {
-//     string_t const code =
-//         "int if_simple_else (int a2, int b2) {if(a2 || b2){return a2;}else return b2;}";
+TEST(if_else_refactor, if_simple_else)
+{
+    string_t const code =
+        "int if_simple_else (int a2, int b2) {if(a2 || b2){return a2;}else return b2;}";
 
-//     string_t const refactored_expr =
-//         "(a2 || b2)*(a2) + !(a2 || b2)*(b2);";
+    string_t const refactored_expr =
+        "(a2 || b2)*(a2) + !(a2 || b2)*(b2);";
 
-//     replacements_map_t reps;
-//     vec_str ftargs = {};
-//     bool const dry_run(false);
-//     IESR iesr(reps, dry_run);
-//     replacements_t exp_repls;
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
 
-//     if (exp_repls.add({fname, 37u, 39u, refactored_expr}))
-//     {
-//         HERE("add replacement failed")
-//     }
+    if (exp_repls.add({fname, 37u, 39u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
 
-//     run_case_iesr(code, iesr, exp_repls);
-// }
+    run_case_iesr(code, iesr, exp_repls);
+}
 
-// TEST(if_else_refactor, simple_if_else)
-// {
-//     string_t const code =
-//         "int simple_if_else (int a3, int b3) {if(a3 || b3)return a3;else{return b3;}}";
+TEST(if_else_refactor, simple_if_else)
+{
+    string_t const code =
+        "int simple_if_else (int a3, int b3) {if(a3 || b3)return a3;else{return b3;}}";
 
-//     string_t const refactored_expr =
-//         "(a3 || b3)*(a3) + !(a3 || b3)*(b3);";
+    string_t const refactored_expr =
+        "(a3 || b3)*(a3) + !(a3 || b3)*(b3);";
 
-//     replacements_map_t reps;
-//     vec_str ftargs = {};
-//     bool const dry_run(false);
-//     IESR iesr(reps, dry_run);
-//     replacements_t exp_repls;
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
 
-//     if (exp_repls.add({fname, 37u, 38u, refactored_expr}))
-//     {
-//         HERE("add replacement failed")
-//     }
+    if (exp_repls.add({fname, 37u, 38u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
 
-//     run_case_iesr(code, iesr, exp_repls);
-// }
+    run_case_iesr(code, iesr, exp_repls);
+}
 
-// TEST(if_else_refactor, if_else_only_return)
-// {
-//     string_t const code =
-//         "int if_else_only_return (int a4, int b4) {if(a4 || b4){return a4;}else{return b4;}}";
+TEST(if_else_refactor, if_else_only_return)
+{
+    string_t const code =
+        "int if_else_only_return (int a4, int b4) {if(a4 || b4){return a4;}else{return b4;}}";
 
-//     string_t const refactored_expr =
-//         "(a4 || b4)*(a4) + !(a4 || b4)*(b4);";
+    string_t const refactored_expr =
+        "(a4 || b4)*(a4) + !(a4 || b4)*(b4);";
 
-//     replacements_map_t reps;
-//     vec_str ftargs = {};
-//     bool const dry_run(false);
-//     IESR iesr(reps, dry_run);
-//     replacements_t exp_repls;
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
 
-//     if (exp_repls.add({fname, 42u, 40u, refactored_expr}))
-//     {
-//         HERE("add replacement failed")
-//     }
+    if (exp_repls.add({fname, 42u, 40u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
 
-//     run_case_iesr(code, iesr, exp_repls);
-// }
+    run_case_iesr(code, iesr, exp_repls);
+}

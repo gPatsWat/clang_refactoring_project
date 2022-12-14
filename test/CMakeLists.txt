@@ -22,6 +22,7 @@ set( CORCT_UNITTESTS_SRC
 #   lib/callsite_expander_test.cc
   lib/callsite_lister_test.cc
   lib/if_else_simple_refactorer_test.cc
+  # lib/predicate_nopredicate_test.cc
 #   lib/clang_utilities_test.cc
 #   lib/function_common_test.cc
 #   lib/function_def_lister_test.cc
@@ -39,6 +40,7 @@ add_executable(corct_unittests ${CORCT_UNITTESTS_SRC})
 target_include_directories(corct_unittests
   PUBLIC
     ${googletest_SOURCE_DIR}/googletest/include/gtest
+    ${googlebenchmark_SOURCE_DIR}/include/
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/../lib
@@ -54,5 +56,6 @@ target_link_libraries(corct_unittests
   )
 
   add_subdirectory(test-progs)
+  add_subdirectory(benchmarks)
 
 # End of file

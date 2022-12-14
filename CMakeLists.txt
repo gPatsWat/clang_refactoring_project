@@ -101,6 +101,19 @@ if (DEFINED ENABLE_UNIT_TESTS )
    endif()
 endif()
 
+# 4. ---------- Unit Tests ------------
+# option(ENABLE_BENCHMARKS "Enable benchmarks" ON)
+# if (DEFINED ENABLE_BENCHMARKS )
+#    set(CORCT_GBENCHMARKS_DIR ${CMAKE_SOURCE_DIR}/test)
+#    if (IS_DIRECTORY ${CORCT_GBENCHMARKS_DIR})
+#       add_subdirectory(${CORCT_GBENCHMARKS_DIR})
+#    else()
+#       message("CORCT_GBENCHMARKS_DIR:" ${CORCT_GBENCHMARKS_DIR})
+#       message("CMAKE_SOURCE_DIR:" ${CMAKE_SOURCE_DIR})
+#       message("Warning: Test dir ${CORCT_GBENCHMARKS_DIR} not found.")
+#    endif()
+# endif()
+
 # 4. ----------- Appz ------------
 
 add_subdirectory(src)

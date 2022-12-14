@@ -39,3 +39,5 @@ prac/**
 
 lib/new_refactorer.h
 src/SimpleConverter.cc
+
+test-progs/.cache/**
