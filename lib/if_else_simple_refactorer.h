@@ -123,6 +123,7 @@ namespace corct
           else
           {
             std::cout << "compound if_then is not safe to convert" << std::endl;
+            return;
           }
         }
         else
@@ -134,7 +135,8 @@ namespace corct
           }
           else
           {
-            std::cout << "simple if_then is not a return stmt" << std::endl;
+            std::cout << "simple if_then is not a return stmt, not safe to convert" << std::endl;
+            return;
           }
         }
 
@@ -156,6 +158,7 @@ namespace corct
           else
           {
             std::cout << "compound else_then is not safe to convert" << std::endl;
+            return;
           }
         }
         else
@@ -164,7 +167,7 @@ namespace corct
           if (else_branch)
           {
             std::cout << "multiple condition refactoring currently not supported" << std::endl;
-            two_branches = false;
+            return;
           }
           else
           {
@@ -176,6 +179,7 @@ namespace corct
             else
             {
               std::cout << "compound else_then is not safe to convert" << std::endl;
+              return;
             }
           }
         }
@@ -217,6 +221,21 @@ namespace corct
         else if (simple_else && two_branches)
         {
           rep = gen_new_expression_with_offset(condstmt, ifstmt, if_return_stmt, else_return_stmt, 1u, src_manager);
+          if (!dry_run_)
+          {
+            // use file name to select correct Replacements
+            auto &reps = find_repls(ifstmt, src_manager, rep_map_);
+            if (auto e = reps.add(rep))
+            {
+              // llvm::outs() << e;
+              std::cout << "rep fp: " << rep.getFilePath().str() << "\nreps file path: " << reps.begin()->getFilePath().str() << std::endl;
+              HERE("add replacement failed");
+            }
+          }
+        }
+        else if(two_branches)
+        {
+          rep = gen_new_expression(condstmt, ifstmt, if_return_stmt, else_return_stmt, src_manager);
           if (!dry_run_)
           {
             // use file name to select correct Replacements

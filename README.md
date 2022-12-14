@@ -90,6 +90,9 @@ TODO: extrapolate to two or more cases which depend on condition.
 
 References:
 
+Branch Pipelines:
+https://www.youtube.com/watch?v=ckQAlp7WeHo
+
 Fedor Pikus: C++ Branchless Programming videos
 https://github.com/alpbintug/Branchless-programming/tree/master/basicOperations
 

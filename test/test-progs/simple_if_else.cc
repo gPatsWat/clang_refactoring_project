@@ -28,6 +28,18 @@ int simple_if_else_simple_return(int a2, int b2)
         return b2;
 }
 
+int if_else_only_return(int a4, int b4)
+{
+    if(a4 || b4)
+    {
+        return a4;
+    }
+    else
+    {
+        return b4;
+    }
+}
+
 int main()
 {
     return 0;

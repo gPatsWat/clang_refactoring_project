@@ -7,7 +7,16 @@ FetchContent_Declare(
   GIT_TAG release-1.12.1
 )
 
+include(FetchContent)
+FetchContent_Declare(
+  googlebenchmark
+  # Specify the commit you depend on and update it regularly.
+  GIT_REPOSITORY https://github.com/google/benchmark.git
+  GIT_TAG v1.7.1
+)
+
 FetchContent_MakeAvailable(googletest)
+FetchContent_MakeAvailable(googlebenchmark)
 
 set( CORCT_UNITTESTS_SRC
 #   lib/callsite_expander_test.cc

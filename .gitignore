@@ -36,3 +36,6 @@
 
 build/**
 prac/**
+
+lib/new_refactorer.h
+src/SimpleConverter.cc

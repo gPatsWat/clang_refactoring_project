@@ -19,5 +19,6 @@ endmacro()
 add_refactor_exe(callsite-lister CallsiteLister.cc)
 add_refactor_exe(branchsite-lister BranchsiteLister.cc)
 add_refactor_exe(branch-converter BranchConverter.cc)
+add_refactor_exe(simple SimpleConverter.cc)
 
 # End of file
