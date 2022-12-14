@@ -18,3 +18,5 @@ set(BM_LIBRARIES
 
 add_bm_exe(bm_OR bm_OR.cc)
 add_bm_exe(bm_PLUS bm_PLUS.cc)
+add_bm_exe(bm_BRANCHLESS bm_branchless.cc)
+add_bm_exe(bm_BRANCHED bm_branched.cc)
