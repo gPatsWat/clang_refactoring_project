@@ -1,5 +1,5 @@
 #include <iostream>
-#include <benchmark/benchmark.h>
+#include "benchmark/benchmark.h"
 
 void foo() {
     int a = 1, b = 0;
@@ -12,6 +12,6 @@ void foo() {
 }
 
 int main(int argc, char** argv) {
-    int num
+    int num;
     for(int i = 0;i < stoi(); )
 }

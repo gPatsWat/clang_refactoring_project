@@ -82,20 +82,26 @@ namespace corct
                result.Nodes.getNodeAs<clang::IfStmt>("if_else_bind_name"))))
       {
         // do nothing
+        std::cout << "\033[1;31m compound if-else\033[0m\n" << std::endl;
+        return;
       }
       else if ((ifstmt = const_cast<clang::IfStmt *>(
                     result.Nodes.getNodeAs<clang::IfStmt>("if_simple_else_bind_name"))))
       {
+        std::cout << "\033[1;31m if-simple-else\033[0m\n" << std::endl;
         simple_else = true;
       }
       else if ((ifstmt = const_cast<clang::IfStmt *>(
                     result.Nodes.getNodeAs<clang::IfStmt>("simple_if_else_bind_name"))))
       {
+        std::cout << "\033[1;31m simple-if-else\033[0m\n" << std::endl;
+
         simple_if = true;
       }
       else if ((ifstmt = const_cast<clang::IfStmt *>(
                     result.Nodes.getNodeAs<clang::IfStmt>("simple_if_simple_else_bind_name"))))
       {
+        std::cout << "\033[1;31m simple-if-simple-else\033[0m\n" << std::endl;
         simple_if = simple_else = true;
       }
 
