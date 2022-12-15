@@ -5,15 +5,25 @@
 namespace corct {
     using namespace clang::ast_matchers;
 
-    /**
-     * @brief matches any if condition.
-     * Note: the actual logic of whether it is a lone if or accompanied with
-     * else conditions is done by parsing the AST rather than creating custom
-     * matchers (which is a lot harder and less flexible).
+     /**
+     * @brief matches any if condition whose parents are not conditions.
      *
      * @return auto
      */
     inline auto mk_if_matcher() {
+        return ifStmt(unless(isExpansionInSystemHeader()),
+        unless(hasAncestor(ifStmt())),
+        hasCondition(stmt().bind("condStmt")),
+        hasThen(stmt().bind("if_then_stmt")),
+        hasElse(stmt().bind("else_stmt"))).bind("if_else_bind_name");
+    }
+
+    /**
+     * @brief matches any if condition with only returs.
+     *
+     * @return auto
+     */
+    inline auto mk_compound_if_matcher() {
         return ifStmt(unless(isExpansionInSystemHeader()),
         unless(hasAncestor(ifStmt())),
         hasCondition(stmt().bind("condStmt")),

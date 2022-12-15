@@ -27,10 +27,8 @@ print_branch_details(clang::Stmt const * stmt,
 
   clang::IfStmt const * if_iter = ifstmt;
 
-  //TODO: complete this
   while(if_iter) {
     if(auto elseptr = clang::dyn_cast_or_null<clang::IfStmt const>(if_iter->getElse())) {
-      o << elseptr << "\n";
       o << "elseStmt:\n"
         << tabs << "condition:"
         << tabs << get_source_text(elseptr->getCond()->getSourceRange(), sm).str() << "\n"
@@ -41,8 +39,20 @@ print_branch_details(clang::Stmt const * stmt,
         << "\n";
         if_iter = elseptr;
     }
-    else
+    else if(auto stmtptr = clang::dyn_cast_or_null<clang::Stmt const>(if_iter->getElse())){
+      o << "last nonelse statement:\n"
+        << tabs << get_source_text(stmtptr->getSourceRange(), sm).str() << "\n"
+        #ifdef PRINT_SOURCELOC
+        << tabs << "callsite source range: "
+        << tabs << fullSourceRangeAsString(ifstmt->getSourceRange(), &sm)
+        #endif
+        << "\n";
+        if_iter = clang::dyn_cast_or_null<clang::IfStmt const>(stmtptr);
+    }
+    else {
+      o << "panic: unknown statement type or branch end!!";
       break;
+    }
   }
 
 }  // print_if_condition_details

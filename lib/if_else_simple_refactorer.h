@@ -268,7 +268,7 @@ namespace corct
 
     matchers_t mk_branch_matcher() const override
     {
-      return {mk_if_matcher(), mk_if_simple_else_matcher(), mk_simple_if_else_matcher(), mk_simple_if_simple_else_matcher()};
+      return {mk_compound_if_matcher(), mk_if_simple_else_matcher(), mk_simple_if_else_matcher(), mk_simple_if_simple_else_matcher()};
     }
 
     /** \brief Ctor

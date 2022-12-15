@@ -39,7 +39,7 @@ namespace corct
                 result.Nodes.getNodeAs<Stmt>("condStmt");
 
             auto ifstmt =
-                result.Nodes.getNodeAs<IfStmt>("ifStmt");
+                result.Nodes.getNodeAs<IfStmt>("if_else_bind_name");
 
             SourceManager & sm(result.Context->getSourceManager());
 

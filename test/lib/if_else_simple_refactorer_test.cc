@@ -156,3 +156,55 @@ TEST(if_else_refactor, if_else_only_return)
 
     run_case_iesr(code, iesr, exp_repls);
 }
+
+TEST(if_else_refactor, if_else_only_return_indented)
+{
+    string_t const code =
+        "int if_else_only_return (int              a4, int b4) {if(a4 || b4){ \
+            return          a4;} \
+            else{return b4;}}";
+
+    string_t const refactored_expr =
+        "return (a4 || b4)*(a4) + !(a4 || b4)*(b4);";
+
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
+
+    if (exp_repls.add({fname, 55u, 75u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
+
+    run_case_iesr(code, iesr, exp_repls);
+}
+
+//This fails maybe because \n has to be included in the length
+// but without \n macro isn't recognized??
+
+TEST(if_else_refactor, if_else_only_return_macro)
+{
+    string_t const code =
+        "#define MACRO return b4\n\
+        int if_else_only_return (int              a4, int b4) {if(a4 || b4){ \
+            return          a4;} \
+            else{MACRO;}}";
+
+    string_t const refactored_expr =
+        "return (a4 || b4)*(a4) + !(a4 || b4)*(b4);";
+
+    replacements_map_t reps;
+    vec_str ftargs = {};
+    bool const dry_run(false);
+    IESR iesr(reps, dry_run);
+    replacements_t exp_repls;
+
+    if (exp_repls.add({fname, 86u, 71u, refactored_expr}))
+    {
+        HERE("add replacement failed")
+    }
+
+    run_case_iesr(code, iesr, exp_repls);
+}
