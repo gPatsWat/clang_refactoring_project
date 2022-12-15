@@ -75,7 +75,7 @@ TEST(if_else_refactor, simple_if_simple_else)
         "int simple_if_else_simple_return (int a1, int b1) {if(a1 || b1)return a1;else return b1;}";
 
     string_t const refactored_expr =
-        "(a1 || b1)*(a1) + !(a1 || b1)*(b1);";
+        "return (a1 || b1)*(a1) + !(a1 || b1)*(b1);";
 
     replacements_map_t reps;
     vec_str ftargs = {};
@@ -97,7 +97,7 @@ TEST(if_else_refactor, if_simple_else)
         "int if_simple_else (int a2, int b2) {if(a2 || b2){return a2;}else return b2;}";
 
     string_t const refactored_expr =
-        "(a2 || b2)*(a2) + !(a2 || b2)*(b2);";
+        "return (a2 || b2)*(a2) + !(a2 || b2)*(b2);";
 
     replacements_map_t reps;
     vec_str ftargs = {};
@@ -119,7 +119,7 @@ TEST(if_else_refactor, simple_if_else)
         "int simple_if_else (int a3, int b3) {if(a3 || b3)return a3;else{return b3;}}";
 
     string_t const refactored_expr =
-        "(a3 || b3)*(a3) + !(a3 || b3)*(b3);";
+        "return (a3 || b3)*(a3) + !(a3 || b3)*(b3);";
 
     replacements_map_t reps;
     vec_str ftargs = {};
@@ -141,7 +141,7 @@ TEST(if_else_refactor, if_else_only_return)
         "int if_else_only_return (int a4, int b4) {if(a4 || b4){return a4;}else{return b4;}}";
 
     string_t const refactored_expr =
-        "(a4 || b4)*(a4) + !(a4 || b4)*(b4);";
+        "return (a4 || b4)*(a4) + !(a4 || b4)*(b4);";
 
     replacements_map_t reps;
     vec_str ftargs = {};

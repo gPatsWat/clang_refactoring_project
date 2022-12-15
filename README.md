@@ -8,10 +8,18 @@ sudo apt install libclang-11-dev
 /usr/bin/../lib/cmake/clang-10/ClangConfig.cmake
 
 cd build
-cmake -DGTEST_ROOT=../googletest ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 
-./test/test-progs/if_else_basic.cc runs branch version and
-branchless version each n times. This can be profiled with perf. The assembly output is also given which can be analysed to get the exact number of branch instructions present in the binary. This will enable reasoning about how many branches get eliminated, barring, the hardware optimisations which the cpu does.
+To run branch-converter over actual Cpp code:
+./src/branch-converter ../test/test-progs/simple_if_else.cc (while in build directory)
+
+For dry-run add -d flag.
+
+To run unit tests:
+./test/corct_unittests
+
+To run benchmarks:
+./test/benchmarks/bm_[OR/PLUS/BRANCHED/BRANCHLESS]
 
 Clang API nits and grits:
 getElse can return all kinds of statements (you can check by doing clang-check -ast-dump -ast-dump-filter=foo test/test-progs/if_else_basic.cc).

@@ -83,7 +83,6 @@ namespace corct
       {
         // do nothing
         std::cout << "\033[1;31m compound if-else\033[0m\n" << std::endl;
-        return;
       }
       else if ((ifstmt = const_cast<clang::IfStmt *>(
                     result.Nodes.getNodeAs<clang::IfStmt>("if_simple_else_bind_name"))))
@@ -197,6 +196,7 @@ namespace corct
         {
           // give offset 1 as expression is simple_if and simple_else to include the semicolon
           rep = gen_new_expression_with_offset(condstmt, ifstmt, if_return_stmt, else_return_stmt, 1u, src_manager);
+          std::cout << "\033[1;31m generated replacement for simple-if-simple-else\033[0m\n" << std::endl;
           if (!dry_run_)
           {
             // use file name to select correct Replacements
@@ -212,6 +212,7 @@ namespace corct
         else if (simple_if && two_branches)
         {
           rep = gen_new_expression(condstmt, ifstmt, if_return_stmt, else_return_stmt, src_manager);
+          std::cout << "\033[1;31m generated replacement for simple-if-else\033[0m\n" << std::endl;
           if (!dry_run_)
           {
             // use file name to select correct Replacements
@@ -227,6 +228,7 @@ namespace corct
         else if (simple_else && two_branches)
         {
           rep = gen_new_expression_with_offset(condstmt, ifstmt, if_return_stmt, else_return_stmt, 1u, src_manager);
+          std::cout << "\033[1;31m generated replacement for if-simple-else\033[0m\n" << std::endl;
           if (!dry_run_)
           {
             // use file name to select correct Replacements
@@ -242,6 +244,7 @@ namespace corct
         else if(two_branches)
         {
           rep = gen_new_expression(condstmt, ifstmt, if_return_stmt, else_return_stmt, src_manager);
+          std::cout << "\033[1;31m generated replacement for if-else\033[0m\n" << std::endl;
           if (!dry_run_)
           {
             // use file name to select correct Replacements

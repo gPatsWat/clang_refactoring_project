@@ -56,7 +56,7 @@ namespace corct
     std::string else_return_val = get_source_text(else_return_stmt->getRetValue()->getSourceRange(), sm).str();
 
     // construct branchless expression
-    rep_str << "(" << cond << ")*" << "(" << if_return_val << ")"
+    rep_str << "return (" << cond << ")*" << "(" << if_return_val << ")"
       << " + " << "!(" << cond << ")*" << "(" << else_return_val << ");";
 
     std::cout << rep_str.str() << std::endl;
@@ -97,7 +97,7 @@ namespace corct
     std::string else_return_val = get_source_text(else_return_stmt->getRetValue()->getSourceRange(), sm).str();
 
     // construct branchless expression
-    rep_str << "(" << cond << ")*" << "(" << if_return_val << ")"
+    rep_str << "return (" << cond << ")*" << "(" << if_return_val << ")"
       << " + " << "!(" << cond << ")*" << "(" << else_return_val << ");";
 
     std::cout << rep_str.str() << std::endl;

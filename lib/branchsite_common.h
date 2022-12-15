@@ -17,8 +17,8 @@ namespace corct {
         return ifStmt(unless(isExpansionInSystemHeader()),
         unless(hasAncestor(ifStmt())),
         hasCondition(stmt().bind("condStmt")),
-        hasThen(stmt().bind("if_then_stmt")),
-        hasElse(stmt().bind("else_stmt"))).bind("if_else_bind_name");
+        hasThen(compoundStmt(has(returnStmt().bind("if_return_stmt"))).bind("then_compound_stmt")),
+        hasElse(compoundStmt(has(returnStmt().bind("else_return_stmt"))).bind("else_compound_stmt"))).bind("if_else_bind_name");
     }
 
     /**
